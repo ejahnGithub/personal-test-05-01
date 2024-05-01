@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/ejahnGithub/personal-test-05-01/issues"
   },
-  "homepage": "https://github.com/ejahnGithub/personal-test-05-01#readme"
+  "homepage": "https://github.com/ejahnGithub/personal-test-05-01#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.24.5",
+    "@babel/core": "^7.24.5",
+    "@babel/preset-env": "^7.24.5"
+  }
 }
