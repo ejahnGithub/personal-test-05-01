@@ -18,3 +18,5 @@ fetch("https://registry.npmjs.org/make-fetch-happen")
       console.log(`got ${body.name} from cache`);
     });
   });
+
+console.log("Hello, world!");
