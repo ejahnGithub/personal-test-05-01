@@ -3,6 +3,10 @@ name: Build and push Docker image
 on:
   workflow_dispatch:
     inputs:
+      registry:
+        description: "Docker registry to push the image to"
+        required: true
+        default: "ghcr.io"
       image_name:
         description: "Name of the Docker image"
         required: true
@@ -25,6 +29,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Docker build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -32,11 +43,18 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
+          tags: ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_tag }}
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: ${{ env.REGISTRY }}/${{ inputs.image_name }}
+          subject-name: ${{ inputs.registry }}/${{ inputs.image_name }}
           subject-digest: ${{ steps.docker_build.outputs.digest }}
+          push-to-registry: true
+      - name: Generate SBOM attestation
+        uses: actions/attest-sbom@v1
+        with:
+          subject-name: ${{ inputs.registry }}/${{ inputs.image_name }}
+          subject-digest: ${{ steps.docker_build.outputs.digest }}
+          sbom-path: "sbom.json"
           push-to-registry: true
