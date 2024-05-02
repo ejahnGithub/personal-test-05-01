@@ -1,7 +1,7 @@
 FROM ubuntu
 
 # build index.js 
-COPY index.js /index.js
+COPY index.js ./
 
 # install nodejs
 RUN apt-get update
