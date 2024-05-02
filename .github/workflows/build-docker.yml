@@ -51,6 +51,13 @@ jobs:
           subject-name: ${{ inputs.registry }}/ejahngithub/${{ inputs.image_name }}
           subject-digest: ${{ steps.docker_build.outputs.digest }}
           push-to-registry: true
+
+      - name: Generate SBOM for
+        uses: anchore/sbom-action@v0.15.11
+        with:
+          format: "spdx-json"
+          output-file: "sbom.json"
+
       - name: Generate SBOM attestation
         uses: actions/attest-sbom@v1
         with:
